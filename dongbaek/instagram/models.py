@@ -1,10 +1,12 @@
+from django.conf import settings
 from django.contrib.admin.decorators import register
-from django.core.checks import messages
 from django.db import models
+
 
 # Create your models here.
 
 class Post(models.Model):
+    author = models.ForeignKey(settings.AUTH_USER_MODEL , on_delete=models.CASCADE)
     message = models.TextField(blank=False)
     photo = models.ImageField(blank=True, upload_to='instagram/post/%Y/%m/%d')
     is_public = models.BooleanField(default=False, verbose_name='공개여부')
@@ -15,8 +17,15 @@ class Post(models.Model):
     def __str__(self):
         return self.message
     
+    # id의 역순으로 정렬함.
     class Meta:
         ordering = ['-id']
+
+class Comment(models.Model):
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, limit_choices_to={'is_public': True}) # post_id 필드가 생성
+    message = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
 
 
