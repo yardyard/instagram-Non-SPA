@@ -43,10 +43,12 @@ INSTALLED_APPS = [
     # local apps
     'inflearn',
     'instagram',
+    'church',
 
     # third apps
     'django_extensions',
     'debug_toolbar',
+    'bootstrap4',
 ]
 
 MIDDLEWARE = [
