@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'inflearn',
     'instagram',
     'church',
+    'accounts',
 
     # third apps
     'django_extensions',

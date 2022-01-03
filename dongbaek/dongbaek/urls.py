@@ -24,6 +24,7 @@ urlpatterns = [
     path('inflearn/', include('inflearn.urls')),
     path('instagram/', include('instagram.urls')),
     path('church/', include('church.urls')),
+    path('accounts/', include('accounts.urls')),
 ]
 
 if settings.DEBUG:

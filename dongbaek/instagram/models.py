@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.contrib.admin.decorators import register
 from django.db import models
+from django.db.models.fields.related import ManyToManyField
 
 
 # Create your models here.
@@ -9,6 +10,9 @@ class Post(models.Model):
     author = models.ForeignKey(settings.AUTH_USER_MODEL , on_delete=models.CASCADE)
     message = models.TextField(blank=False)
     photo = models.ImageField(blank=True, upload_to='instagram/post/%Y/%m/%d')
+    tag_set = models.ManyToManyField('Tag', blank=True)
+    # Tag를 문자열로 적은 이유는, Tag Class가 맨 아래 있기 때문에 참조하는데 있어서 오류가 생기기 때문이다.
+    # blank는 Tag가 없는 상황을 허용할건지 (True)를 물어보는 인자 옵션이다. 
     is_public = models.BooleanField(default=False, verbose_name='공개여부')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now_add=True)
@@ -28,6 +32,12 @@ class Comment(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
 
+class Tag(models.Model):
+    name = models.CharField(max_length=50, unique=True) # 태그는 해당 태그 테이블 내에서 유일해야 하기에 unique 사용
+    #post_set = models.ManyToManyField(Post) # reverse 방법
+    
+    def __str__(self):
+        return self.name
 
 
 
