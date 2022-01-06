@@ -1,5 +1,8 @@
 from django.shortcuts import render
+from pandas.io.pytables import format_doc
 from .models import Post
+from django.http import HttpRequest, HttpResponse
+
 
 
 def post_list(request):
@@ -8,6 +11,7 @@ def post_list(request):
     
     # 전달 받은 인자 중에서 'q'라는 이름의 인자를 가져오겠다는 의미
     # 두번째 매개변수는 만약 'q'라는 인자가 없을시 반환할 값을 의미
+    # https://velog.io/@sdk1926/request.GET.getq
     q = request.GET.get('q', '')
     
     # 'q'라는 인자가 있었을 경우
@@ -25,3 +29,16 @@ def post_list(request):
         'post_list': qs,
         'q' : q,
     })
+
+
+
+
+def post_detail(request: HttpRequest, pk: int) -> HttpResponse:
+    response = HttpResponse()
+    response.wrire("Hello World")
+    return response
+
+
+
+
+
