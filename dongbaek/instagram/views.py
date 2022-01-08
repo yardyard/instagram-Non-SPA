@@ -1,7 +1,7 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from pandas.io.pytables import format_doc
 from .models import Post
-from django.http import HttpRequest, HttpResponse
+from django.http import HttpRequest, HttpResponse, Http404
 
 
 
@@ -34,11 +34,16 @@ def post_list(request):
 
 
 def post_detail(request: HttpRequest, pk: int) -> HttpResponse:
-    response = HttpResponse()
-    response.wrire("Hello World")
-    return response
+    post = get_object_or_404(Post, pk=pk) # 앞 pk는 필드 종류, 뒷 pk는 실제 pk 값을 의미
+    return render(request, 'instagram/post_detail.html', {
+        'post' : post,
+    })
 
 
+
+class DetailView:
+    def __init__(self) -> None:
+        pass
 
 
 
