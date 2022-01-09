@@ -18,8 +18,12 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 from django.views.generic import TemplateView
+from django.views.generic.base import RedirectView
 
 urlpatterns = [
+    path('', RedirectView.as_view(
+        pattern_name = 'instagram:post_list',
+        ), name='root'),
     path('admin/', admin.site.urls),
     path('inflearn/', include('inflearn.urls')),
     path('instagram/', include('instagram.urls')),
