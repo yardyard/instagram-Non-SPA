@@ -1,8 +1,10 @@
+from django.db.models.base import Model
 from django.shortcuts import render, get_object_or_404
+from django.views.generic.list import ListView
 from pandas.io.pytables import format_doc
 from .models import Post
 from django.http import HttpRequest, HttpResponse, Http404
-
+from django.views.generic import DetailView
 
 
 def post_list(request):
@@ -32,20 +34,20 @@ def post_list(request):
 
 
 
-
+"""
 def post_detail(request: HttpRequest, pk: int) -> HttpResponse:
     post = get_object_or_404(Post, pk=pk) # 앞 pk는 필드 종류, 뒷 pk는 실제 pk 값을 의미
     return render(request, 'instagram/post_detail.html', {
         'post' : post,
     })
+"""
 
+post_detail = DetailView.as_view(
+    model = Post,
+    queryset = Post.objects.all()
+)
 
-
-class DetailView:
-    def __init__(self) -> None:
-        pass
-
-
+post_list = ListView.as_view(model=Post, paginate_by= 10)
 
 def archives_year(request, year):
     return HttpResponse(f"{year}년 archives")
