@@ -2,7 +2,7 @@ from django.conf import settings
 from django.contrib.admin.decorators import register
 from django.db import models
 from django.db.models.fields.related import ManyToManyField
-
+from django.urls import reverse
 
 # Create your models here.
 
@@ -24,6 +24,9 @@ class Post(models.Model):
     # id의 역순으로 정렬함.
     class Meta:
         ordering = ['-id']
+
+    def get_absolute_url(self):
+        return reverse('instagram:post_detail', args=[self.pk])
 
 class Comment(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE, limit_choices_to={'is_public': True}) # post_id 필드가 생성

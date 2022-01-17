@@ -1,12 +1,16 @@
+from django.contrib.auth.decorators import login_required
 from django.db.models.base import Model
-from django.shortcuts import render, get_object_or_404
+from django.http import Http404, HttpRequest, HttpResponse
+from django.shortcuts import get_object_or_404, render
+from django.views.generic import DetailView, ArchiveIndexView
+from django.views.generic.dates import YearArchiveView
 from django.views.generic.list import ListView
-from pandas.io.pytables import format_doc
+from django.utils.decorators import method_decorator
 from .models import Post
-from django.http import HttpRequest, HttpResponse, Http404
-from django.views.generic import DetailView
 
 
+
+@login_required
 def post_list(request):
     # QuerySet을 의미함.
     qs = Post.objects.all()
@@ -33,6 +37,16 @@ def post_list(request):
     })
 
 
+# post_list = ListView.as_view(model=Post, paginate_by= 10)
+@method_decorator(login_required, name='dispatch')
+class PostListView(ListView):
+    model = Post
+    paginate_by = 10
+
+
+post_list = PostListView.as_view()
+
+
 
 """
 def post_detail(request: HttpRequest, pk: int) -> HttpResponse:
@@ -47,8 +61,7 @@ post_detail = DetailView.as_view(
     queryset = Post.objects.all()
 )
 
-post_list = ListView.as_view(model=Post, paginate_by= 10)
 
-def archives_year(request, year):
-    return HttpResponse(f"{year}년 archives")
-    
+post_archive = ArchiveIndexView.as_view(model= Post , date_field='created_at')
+
+post_archive_year = YearArchiveView.as_view(model= Post, date_field='created_at', make_object_list=True)
