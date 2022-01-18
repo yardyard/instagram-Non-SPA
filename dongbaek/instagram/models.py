@@ -4,11 +4,22 @@ from django.db import models
 from django.db.models.fields.related import ManyToManyField
 from django.urls import reverse
 
+from django.core.validators import MinLengthValidator
+
+# validators 객체는 함수를 반환하여준다.
+# 만약 3글자 미만의 문자열을 입력받으면 forms.ValidationError를 반환한다.
+min_length_Validators = MinLengthValidator(3)
+
+
+
+
 # Create your models here.
 
 class Post(models.Model):
     author = models.ForeignKey(settings.AUTH_USER_MODEL , on_delete=models.CASCADE)
-    message = models.TextField(blank=False)
+    message = models.TextField(
+        validators=[min_length_Validators]
+    )
     photo = models.ImageField(blank=True, upload_to='instagram/post/%Y/%m/%d')
     tag_set = models.ManyToManyField('Tag', blank=True)
     # Tag를 문자열로 적은 이유는, Tag Class가 맨 아래 있기 때문에 참조하는데 있어서 오류가 생기기 때문이다.

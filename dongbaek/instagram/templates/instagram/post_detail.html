@@ -1,12 +1,11 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
+{% extends "Instagram/layout.html"%}
+
+
+{% block title %}
+    Post  Detail pk#{{ post.pk }}
+{% endblock title %}
+
+{% block content %}
     <h2>Author : {{ post.author }}</h2>
 
     {% if post.photo %}
@@ -16,7 +15,9 @@
     {% endif %}
 
     {{ post.message }}
+    <hr/>
+    <a href="{% url 'instagram:post_list' %}" class="btn btn-primary">
+        목록
+    </a>
+{% endblock content %}
 
-
-</body>
-</html>

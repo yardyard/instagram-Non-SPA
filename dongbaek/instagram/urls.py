@@ -9,6 +9,7 @@ register_converter(DayConverter, 'Day')
 app_name = 'instagram' # URL Reverse에서 namespace 역할을 하게 된다.
 
 urlpatterns = [ 
+    path('new/', views.post_new, name='post_new'),
     path('', views.post_list, name='post_list'),
     path('<int:pk>/', views.post_detail, name='post_detail'), # Post.DoesNotExist 오류
     # 숫자 타입이 나오고, /로 끝날경우 뒤 함수를 호출하겠다는의미

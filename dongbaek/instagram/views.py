@@ -1,12 +1,33 @@
+from urllib import request
+
 from django.contrib.auth.decorators import login_required
 from django.db.models.base import Model
 from django.http import Http404, HttpRequest, HttpResponse
-from django.shortcuts import get_object_or_404, render
-from django.views.generic import DetailView, ArchiveIndexView
+from django.shortcuts import get_object_or_404, render, redirect
+from django.utils.decorators import method_decorator
+from django.views.generic import ArchiveIndexView, DetailView
 from django.views.generic.dates import YearArchiveView
 from django.views.generic.list import ListView
-from django.utils.decorators import method_decorator
+
+from .forms import PostForm
 from .models import Post
+
+
+def post_new(request):
+    if request.method == 'POST':
+        form = PostForm(request.POST, request.FILES)
+        if form.is_valid():
+            post = form.save()
+            # post의 detail.html로 이동함.
+            return redirect(post)
+    else:         
+        form = PostForm()
+        
+    return render(request, 'instagram/post_form.html',{
+        'form' : form,
+    })
+
+
 
 
 
@@ -47,15 +68,6 @@ class PostListView(ListView):
 post_list = PostListView.as_view()
 
 
-
-"""
-def post_detail(request: HttpRequest, pk: int) -> HttpResponse:
-    post = get_object_or_404(Post, pk=pk) # 앞 pk는 필드 종류, 뒷 pk는 실제 pk 값을 의미
-    return render(request, 'instagram/post_detail.html', {
-        'post' : post,
-    })
-"""
-
 post_detail = DetailView.as_view(
     model = Post,
     queryset = Post.objects.all()
@@ -65,3 +77,4 @@ post_detail = DetailView.as_view(
 post_archive = ArchiveIndexView.as_view(model= Post , date_field='created_at')
 
 post_archive_year = YearArchiveView.as_view(model= Post, date_field='created_at', make_object_list=True)
+
