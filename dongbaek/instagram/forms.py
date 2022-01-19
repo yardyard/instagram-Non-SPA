@@ -1,4 +1,5 @@
 from dataclasses import field
+import re
 from django import forms
 from .models import Post
 
@@ -6,4 +7,12 @@ from .models import Post
 class PostForm(forms.ModelForm):
     class Meta:
         model = Post
-        fields = '__all__'
+        fields = [
+            'message', 'photo', 'tag_set', 'is_public'
+        ]
+        
+    def clean_message(self):
+        message = self.cleaned_data.get('message')
+        if message: 
+            message = re.sub(r'[a-zA-Z]+', '', message) # 영어를 공백으로 바꿔준다.
+        return message

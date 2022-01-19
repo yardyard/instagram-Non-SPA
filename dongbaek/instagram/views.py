@@ -1,5 +1,6 @@
-from urllib import request
 
+from urllib import request
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.db.models.base import Model
 from django.http import Http404, HttpRequest, HttpResponse
@@ -12,12 +13,14 @@ from django.views.generic.list import ListView
 from .forms import PostForm
 from .models import Post
 
-
+@login_required
 def post_new(request):
     if request.method == 'POST':
         form = PostForm(request.POST, request.FILES)
         if form.is_valid():
-            post = form.save()
+            post = form.save(commit=False)
+            post.author = request.user # 현재 로그인한 유저 Instance
+            post.save()
             # post의 detail.html로 이동함.
             return redirect(post)
     else:         
@@ -27,6 +30,30 @@ def post_new(request):
         'form' : form,
     })
 
+
+@login_required
+def post_edit(request, pk):
+    post = get_object_or_404(Post, pk=pk)
+
+    # 이렇게 반복되는 코드가 있다면 장식자로 만드는 것도 좋은 방법
+    # 작성자만 수정할 수 있도록 
+    if post.author != request.user:
+        messages.error(request, '작성자만 수정 가능합니다!')
+        return redirect(post)
+
+
+    if request.method == 'POST':
+        form = PostForm(request.POST, request.FILES, instance=post)
+        if form.is_valid():
+            post = form.save()
+            # post의 detail.html로 이동함.
+            return redirect(post)
+    else:         
+        form = PostForm(instance=post)
+        
+    return render(request, 'instagram/post_form.html',{
+        'form' : form,
+    })
 
 
 
