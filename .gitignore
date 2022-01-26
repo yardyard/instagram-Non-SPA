@@ -1,3 +1,8 @@
+__pycache__
+db.sqlite3
+/static
+/media
+.idea
 /dongbaek
 /pyDjango
 /testsg
