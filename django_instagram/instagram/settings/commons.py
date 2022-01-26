@@ -42,7 +42,8 @@ INSTALLED_APPS = [
 
     # Third Apps
     'debug_toolbar',
-
+    'bootstrap4',
+    
     # Local Apps
 ]
 
@@ -63,7 +64,7 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
-            os.path.join(BASE_DIR, 'django_instagram' ,'templates'),
+            os.path.join(BASE_DIR, 'instagram' , 'templates'),
         ],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -128,10 +129,11 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_URL = '/static/'
+
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'django_instagram' ,'static'),
-   
+    os.path.join(BASE_DIR, 'instagram' , 'static'),   
 ]
+
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 MEDIA_URL = '/media/'
