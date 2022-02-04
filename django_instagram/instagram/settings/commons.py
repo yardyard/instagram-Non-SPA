@@ -43,8 +43,10 @@ INSTALLED_APPS = [
     # Third Apps
     'debug_toolbar',
     'bootstrap4',
-    
+
     # Local Apps
+    'accounts',
+  
 ]
 
 MIDDLEWARE = [
@@ -90,6 +92,9 @@ DATABASES = {
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
+
+# accounts 앱에 있는 User 모델을 기본 User 모델로 쓰겠다.
+AUTH_USER_MODEL = "accounts.User" 
 
 
 # Password validation
