@@ -9,7 +9,8 @@ def signup(request):
         form = SignupForm(request.POST)
         if form.is_valid():
             next_url = request.GET.get('next', '/') # next 인자를 가져오고, 없으면 / 주소로 이동
-            user = form.save()
+            signed_user = form.save()
+            signed_user.send_welcome_email() # 추후 비동기 Celery로 처리하기.
             messages.success(request, "회원가입이 되었습니다~!")
             return redirect(next_url)
     else:

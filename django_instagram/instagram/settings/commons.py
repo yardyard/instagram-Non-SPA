@@ -26,6 +26,11 @@ SECRET_KEY = 'x%q5i@=ez!i7g^b0b($t=3o680dgmbl6mna76t+cmf6s0^i)t='
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+# 실제 예외 발생시 해당 어드민에게 이메일을 발송케 함
+ADMINS = [
+    ('Dongbaek', 'yardyard@naver.com'), 
+]
+
 ALLOWED_HOSTS = []
 
 
@@ -145,3 +150,17 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 INTERNAL_IPS = ['127.0.0.1']
+
+
+# Email with Send Grid
+
+SENDGRID_API_KEY = os.environ.get('SENDGRID_API_KEY')
+
+EMAIL_HOST = 'smtp.sendgrid.net'
+EMAIL_HOST_USER = 'apikey'# this is exactly the value 'apikey'
+EMAIL_HOST_PASSWORD = SENDGRID_API_KEY
+EMAIL_PORT = 587
+EMAIL_USE_TLS =True
+
+# 고정 Sender Email 추가
+WELCOME_EMAIL_SENDER = "yardyard@naver.com" 
