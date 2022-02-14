@@ -47,7 +47,7 @@
                                 {% if user.profile %}
                                     <img src= "{{ user.profile.url }}" />
                                 {% else %}
-                                    <img src= "{% url "pydenticon_image" user.username%}" style="width: 24px; height: 24px;" />
+                                    <img src= "{% url 'pydenticon_image' user.username%}" style="width: 24px; height: 24px;" />
                                 {% endif %}
                                 프로필
                             </a>

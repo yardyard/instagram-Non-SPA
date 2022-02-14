@@ -52,6 +52,7 @@ INSTALLED_APPS = [
 
     # Local Apps
     'accounts',
+    'insta',
   
 ]
 
