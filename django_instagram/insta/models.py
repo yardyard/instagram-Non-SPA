@@ -1,5 +1,6 @@
 import re
 from django.db import models
+from django.urls import reverse
 
 # User 외래키로 삼는 법
 from django.conf import settings
@@ -16,6 +17,7 @@ class Post(models.Model):
     def __str__(self):
         return self.caption
 
+
     # 태그 기능
     def extract_tag_list(self):
         # "#"이 붙고 뒤에 문자가 오면 태그로 분류 저장한다.
@@ -30,9 +32,9 @@ class Post(models.Model):
             tag_list.append(tag)
         return tag_list
 
-
-    #def get_absolute_url(self):
-     #   return reverse("model_detail", kwargs={"pk": self.pk})
+    # detail view
+    def get_absolute_url(self):
+        return reverse("insta:post_detail", args=[self.pk])
     
 
 class Tag(models.Model):

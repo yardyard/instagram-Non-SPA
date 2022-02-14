@@ -1,0 +1,30 @@
+{% extends "insta/layout.html" %}
+{% load bootstrap4 %}
+
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="card">
+                    <div class="card-header">    
+                        <img src= "{{ user.profile_url }}" style="width: 24px; height: 24px;"/>
+                        {{ post.author }}                    
+                    </div>
+                    <div class="card-body">   
+                        {% if post.photo.url %}
+                            <img src="{{ post.photo.url  }}" style="width: 100%;"/>
+                        {% endif %}                     
+                    </div>
+                    <div class="card-footer">                           
+                        {% for tag in post.tag_set.all %}
+                            <span class="badge badge-primary" style="color: #fff;
+                            background-color: #007bff;">                        
+                                #{{ tag.name }}
+                            </span>
+                        {% endfor %}                     
+                    </div>
+                </div>    
+            </div>
+        </div>
+    </div>  
+{% endblock %}

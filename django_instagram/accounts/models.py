@@ -1,11 +1,10 @@
-from distutils.command.upload import upload
-from tkinter.tix import Tree
 from django.db import models
 from django.conf import settings
 from django.core.mail import send_mail
 from django.contrib.auth.models import AbstractUser
 from django.template.loader import render_to_string
 from django.core.validators import RegexValidator
+from django.shortcuts import resolve_url
 
 class User(AbstractUser):
     class GenderChoices(models.TextChoices):
@@ -21,6 +20,22 @@ class User(AbstractUser):
     
     # upload_to="%Y/%m/%d" 는 업로드 되는 날짜에 따른 폴더가 생성이 된다.
     profile = models.ImageField(blank=True, upload_to="accounts/proflie/%Y/%m/%d")
+
+
+    # name에 접근된 값에 이름 형태에 맞는 데이터 형태로 반환
+    @property
+    def name(self):
+        return f"{self.first_name} {self.last_name}"
+
+
+    # profile이 있는지 검사하고 알맞은 값을 반환하는 로직
+    @property
+    def profile_url(self):
+        if self.profile:
+            return self.profile.url
+        else:
+            return resolve_url('pydenticon_image', self.username)
+
 
     def send_welcome_email(self):        
         Subject = render_to_string("accounts/welcome_email_subjects.txt", {
