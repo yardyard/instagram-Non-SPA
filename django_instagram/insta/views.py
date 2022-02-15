@@ -1,6 +1,7 @@
 from django.contrib import messages
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth import get_user_model
 
 from .forms import PostForm
 from .models import Tag, Post
@@ -42,4 +43,15 @@ def post_detail(request, pk):
     post = get_object_or_404(Post, pk=pk)
     return render(request, "insta/post_detail.html", {
         "post" : post,
+    })
+
+
+# 유저 페이지
+def user_page(request, username):
+    page_user = get_object_or_404(get_user_model(), username=username, is_active=True)
+    # 해당 유저가 쓴 글만을 filter 처리하여서 저장
+    post_list = Post.objects.filter(author=page_user)
+    return render(request, "insta/user_page.html", {
+        "page_user": page_user,
+        "post_list": post_list,
     })

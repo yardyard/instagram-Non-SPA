@@ -18,6 +18,18 @@ class SignupForm(UserCreationForm):
             'username', 'email', 'first_name', 'last_name'
         ]
     
+    # username 중복 방지 함수
+    def clean_username(self):
+        username = self.cleaned_data.get('username')
+
+        if username:
+            qs = User.objects.filter(username='post')
+            if qs.exists():
+                raise forms.ValidationError("지정할 수 없는 아이디입니다.")
+            
+            return username
+
+    
     # email 중복 방지 함수
     def clean_email(self):
         email = self.cleaned_data.get('email')

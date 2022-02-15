@@ -53,7 +53,7 @@ def profile_edit(request):
     })
    
 
-
+# 비밀번호 수정
 class PasswordChangeView(LoginRequiredMixin, AuthPasswordChangeView):
     # reverse_lazy는 CBV에서 사용하는 reverse 함수이다.
     success_url = reverse_lazy("password_change")
@@ -68,3 +68,5 @@ class PasswordChangeView(LoginRequiredMixin, AuthPasswordChangeView):
 
 
 password_change = PasswordChangeView.as_view()
+
+

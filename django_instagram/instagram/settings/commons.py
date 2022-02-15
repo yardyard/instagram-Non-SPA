@@ -166,3 +166,5 @@ EMAIL_USE_TLS =True
 
 # 고정 Sender Email 추가
 WELCOME_EMAIL_SENDER = "yardyard@naver.com" 
+
+LOGIN_REDIRECT_URL = '/'
