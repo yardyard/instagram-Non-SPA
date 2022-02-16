@@ -51,7 +51,10 @@ def user_page(request, username):
     page_user = get_object_or_404(get_user_model(), username=username, is_active=True)
     # 해당 유저가 쓴 글만을 filter 처리하여서 저장
     post_list = Post.objects.filter(author=page_user)
+    post_list_cnt = post_list.count() # 실제 DB에 count 쿼리를 던짐
+    
     return render(request, "insta/user_page.html", {
         "page_user": page_user,
         "post_list": post_list,
+        "post_list_cnt": post_list_cnt,
     })
