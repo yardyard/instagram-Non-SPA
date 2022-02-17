@@ -10,7 +10,8 @@ app_name = 'insta'
 # username_regax = UnicodeUsernameValidator.regex.lstrip('^').strip('$')
 
 urlpatterns = [
-    
+    path('', views.index, name='index'),
+
     path('post/new', views.post_new, name='post_new'),
     path('post/<int:pk>', views.post_detail, name='post_detail'),
 

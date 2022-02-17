@@ -10,6 +10,22 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import redirect, get_object_or_404
 
 
+
+
+@login_required
+def index(request):
+    suggested_user_list = get_user_model().objects.all()\
+        .exclude(pk=request.user.pk)\
+        .exclude(pk__in=request.user.following_set.all())[:3] # 이미 팔로잉 하고 있는 유저들을 제외함.
+        
+    # 유저 본인 pk를 제외하고 나머지 유저가 suggested_user이다.
+    return render(request, "insta/index.html", {
+        "suggested_user_list" : suggested_user_list,
+    })
+    
+
+
+
 # 포스팅 쓰기
 @login_required
 def post_new(request):

@@ -905,3 +905,4 @@ django_instagram/media/insta/post/20220216/조유리_블로그.jpg.256x256_q85_c
 django_instagram/requirements/common.txt
 django_instagram/Scripts/svg2pdf
 django_instagram/share/man/man1/svg2pdf.1
+django_instagram/instagram/templates/root.html

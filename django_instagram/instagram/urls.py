@@ -3,7 +3,7 @@ from django.conf import settings
 from django.contrib import admin
 from django.urls import path, include, re_path
 from django.conf.urls.static import static
-from django.views.generic import TemplateView
+from django.views.generic import TemplateView, RedirectView
 from django.contrib.auth.decorators import login_required
 from django_pydenticon.views import image as pydenticon_image
 
@@ -11,9 +11,9 @@ from django_pydenticon.views import image as pydenticon_image
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/' , include('accounts.urls')),
-    path('', include('insta.urls')),
+    path('insta', include('insta.urls')), # 추가
 
-    path('', login_required(TemplateView.as_view(template_name='root.html')), name='root' ), # re_path를 사용하면 모든 주소에 매칭이 된다.
+    path('', login_required(RedirectView.as_view(pattern_name='insta:index')), name='root' ), # re_path를 사용하면 모든 주소에 매칭이 된다.
     path('identicon/images/<path:data>/', pydenticon_image, name='pydenticon_image'),
 
 ]

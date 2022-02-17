@@ -1,0 +1,21 @@
+{% extends "insta/layout.html" %}
+
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <a href="{% url 'insta:post_new' %}" class="btn btn-primary">새 포스팅 쓰기</a>             
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-8">     
+                Timeline        
+                <hr />
+                {{ user.following_set.all }}   
+            </div>
+            <div class="col-sm-4">
+                {% include "insta/timeline_sidebar.html" %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

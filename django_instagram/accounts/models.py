@@ -18,6 +18,10 @@ class User(AbstractUser):
     , help_text="48px * 48px 크기의 png / jpg 파일을 업로드해주세요"
     )
     
+    follower_set = models.ManyToManyField("self", blank=True) # 현재 유저를 팔로우 하는 사람의 목록
+    # "self"를 통해서 대상을 User간의 관계로 지정할 수 있다.
+    following_set = models.ManyToManyField("self", blank=True) # 현재 유저가 팔로우 하는 사람의 목록
+
     # upload_to="%Y/%m/%d" 는 업로드 되는 날짜에 따른 폴더가 생성이 된다.
     profile = models.ImageField(blank=True, upload_to="accounts/proflie/%Y/%m/%d")
 
@@ -50,3 +54,5 @@ class User(AbstractUser):
 
 #class Profile(models.Model):
    # pass
+
+
