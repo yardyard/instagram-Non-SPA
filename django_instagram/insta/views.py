@@ -1,8 +1,9 @@
+from urllib import request
 from django.contrib import messages
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import get_user_model
-
+from django.db.models import Q
 from .forms import PostForm
 from .models import Tag, Post
 
@@ -14,13 +15,34 @@ from django.shortcuts import redirect, get_object_or_404
 
 @login_required
 def index(request):
+    # TimeLine에 Follow하는 유저들의 포스팅 만을 노출하기
+    post_list = Post.objects.all()\
+        .filter( 
+            Q(author=request.user) | 
+            Q( author__in=request.user.following_set.all())
+            ) 
+         
+         
+
+    #    Q는 or을 의미한다.
+    #    .filter(
+    #    # 작성자가 본인 또는
+    #        Q(author=request.user)) |
+    #
+    #        # 유저의 following_set에 들어있는 유저만 보이도록
+    #        Q(author__in=request.user.following_set.all()) 
+    #    )
+    #    
+
+
     suggested_user_list = get_user_model().objects.all()\
         .exclude(pk=request.user.pk)\
         .exclude(pk__in=request.user.following_set.all())[:3] # 이미 팔로잉 하고 있는 유저들을 제외함.
         
     # 유저 본인 pk를 제외하고 나머지 유저가 suggested_user이다.
     return render(request, "insta/index.html", {
-        "suggested_user_list" : suggested_user_list,
+        "post_list" : post_list,
+        "suggested_user_list" : suggested_user_list,       
     })
     
 
