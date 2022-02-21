@@ -5,14 +5,21 @@ from django.urls import reverse
 # User 외래키로 삼는 법
 from django.conf import settings
 
-class Post(models.Model):
+class BaseModel(models.Model):
+
+    class Meta:
+        # 아래 코드를 통해 실제 DB에 적용되지 않고, 추상 클래스로 만들어진다.
+        abstract = True
+
+class Post(BaseModel):
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     photo = models.ImageField(upload_to="insta/post/%Y%m%d")
     # 내용
     caption = models.TextField()
     tag_set = models.ManyToManyField('Tag', blank=True)
     location = models.CharField(max_length=100) 
-
+    created_at = models.DateField(auto_now_add=True)
+    updated_at = models.DateField(auto_now=True)
     # Post 객체가 생성되면 아래 __str__함수가 호출된다.
     def __str__(self):
         return self.caption
