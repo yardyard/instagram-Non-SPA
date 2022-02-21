@@ -1,7 +1,9 @@
 <div class="card">
     <div class="card-header">    
         <img src= "{{ user.profile_url }}" style="width: 24px; height: 24px;"/>
-        {{ post.author }}                    
+        <a href="{% url "insta:user_page" post.author.username %}">
+            {{ post.author }}    
+        </a>                
     </div>
     <div class="card-body">   
         {% if post.photo.url %}

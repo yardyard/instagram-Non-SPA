@@ -11,9 +11,9 @@ from django_pydenticon.views import image as pydenticon_image
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/' , include('accounts.urls')),
-    path('insta', include('insta.urls')), # 추가
+    path('insta/', include('insta.urls')), 
 
-    path('', login_required(RedirectView.as_view(pattern_name='insta:index')), name='root' ), # re_path를 사용하면 모든 주소에 매칭이 된다.
+    path('', RedirectView.as_view(pattern_name='insta:index'), name='root' ), # re_path를 사용하면 모든 주소에 매칭이 된다.
     path('identicon/images/<path:data>/', pydenticon_image, name='pydenticon_image'),
 
 ]

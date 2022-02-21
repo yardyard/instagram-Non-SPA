@@ -11,16 +11,24 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import redirect, get_object_or_404
 
 
-
+from datetime import timedelta
+from django.utils import timezone
 
 @login_required
 def index(request):
+    # 현재를 기준으로 3일 이내라면
+    timesince = timezone.now() - timedelta(days=3)
+
     # TimeLine에 Follow하는 유저들의 포스팅 만을 노출하기
     post_list = Post.objects.all()\
         .filter( 
             Q(author=request.user) | 
-            Q( author__in=request.user.following_set.all())
-            ) 
+            Q(author__in=request.user.following_set.all())
+            )\
+        .filter(
+            created_at__lte = timesince # 3일 이내의 게시글
+            #created_at__gte = timesince # 3일 이외의 게시글
+        ) 
          
          
 
@@ -86,13 +94,23 @@ def post_detail(request, pk):
 
 # 유저 페이지
 def user_page(request, username):
+    # 해당 글 작성자 객체 저장 
     page_user = get_object_or_404(get_user_model(), username=username, is_active=True)
+    
     # 해당 유저가 쓴 글만을 filter 처리하여서 저장
     post_list = Post.objects.filter(author=page_user)
     post_list_cnt = post_list.count() # 실제 DB에 count 쿼리를 던짐
     
+        # 로그인이 되어있으면 User 객체, or Not AnonymousUser  
+    if request.user.is_authenticated:
+        # 로그인이 되어있으면, Following_set의 작성자 pk가 존재하면 유저 객체를 가져온다.
+        is_follow = request.user.following_set.filter(pk=page_user.pk).exists()
+    else:
+        is_follow = False
+
     return render(request, "insta/user_page.html", {
         "page_user": page_user,
         "post_list": post_list,
         "post_list_cnt": post_list_cnt,
+        "is_follow": is_follow,
     })
