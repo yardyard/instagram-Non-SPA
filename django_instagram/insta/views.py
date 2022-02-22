@@ -26,8 +26,8 @@ def index(request):
             Q(author__in=request.user.following_set.all())
             )\
         .filter(
-            created_at__lte = timesince # 3일 이내의 게시글
-            #created_at__gte = timesince # 3일 이외의 게시글
+            #created_at__lte = timesince # 3일 이내의 게시글
+            created_at__gte = timesince # 3일 이외의 게시글
         ) 
          
          
@@ -43,12 +43,15 @@ def index(request):
     #    
 
 
+    #like_user_set = Post.like_user_set
+
     suggested_user_list = get_user_model().objects.all()\
         .exclude(pk=request.user.pk)\
         .exclude(pk__in=request.user.following_set.all())[:3] # 이미 팔로잉 하고 있는 유저들을 제외함.
         
     # 유저 본인 pk를 제외하고 나머지 유저가 suggested_user이다.
     return render(request, "insta/index.html", {
+        #"like_user_set" : like_user_set,
         "post_list" : post_list,
         "suggested_user_list" : suggested_user_list,       
     })
@@ -83,6 +86,7 @@ def post_new(request):
         "form" : form,
     })
 
+
 # 포스팅 detail
 def post_detail(request, pk):
     # 해당 pk의 포스팅 객체가 없을 경우 404 에러 반환
@@ -114,3 +118,33 @@ def user_page(request, username):
         "post_list_cnt": post_list_cnt,
         "is_follow": is_follow,
     })
+
+
+# 포스팅 좋아요
+@login_required
+def post_like(request, pk):
+    post = get_object_or_404(Post, pk=pk)
+    
+    # like_user_set에 글 작성자(=request.user)를 추가해준다.
+    post.like_user_set.add(request.user)
+
+    messages.success(request, f"포스팅 {post.pk}를 좋아합니다.")
+    
+    redirect_url = request.META.get("HTTP_REFERER", "root") # HTTP_REFERER은 request 요청을 한 웹페이지의 주소를 보여준다.
+    # 만약 HTTP_REFERER가 없으면 root 주소를 가져온다.
+    return redirect(redirect_url)
+
+
+# 포스팅 싫어요
+@login_required
+def post_unlike(request, pk):
+    post = get_object_or_404(Post, pk=pk)
+    
+    # like_user_set에 글 작성자(=request.user)를 제거해준다.
+    post.like_user_set.remove(request.user)
+
+    messages.success(request, f"포스팅 {post}의 좋아요를 취소합니다.")
+    
+    redirect_url = request.META.get("HTTP_REFERER", "root") # HTTP_REFERER은 request 요청을 한 웹페이지의 주소를 보여준다.
+    # 만약 HTTP_REFERER가 없으면 root 주소를 가져온다.
+    return redirect(redirect_url)
