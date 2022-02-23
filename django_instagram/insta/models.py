@@ -19,8 +19,8 @@ class Post(BaseModel):
     caption = models.TextField()
     tag_set = models.ManyToManyField('Tag', blank=True)
     location = models.CharField(max_length=100) 
-    created_at = models.DateField(auto_now_add=True)
-    updated_at = models.DateField(auto_now=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
     like_user_set = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name="like_post_set", blank=True)
     
     
@@ -56,6 +56,15 @@ class Post(BaseModel):
         ordering = ['-id']
 
 
+
+class Comment(BaseModel):
+    author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    post = models.ForeignKey(Post, on_delete=models.CASCADE)
+    message = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-id']
 
 class Tag(models.Model):
     name = models.CharField(max_length=50, unique=True)

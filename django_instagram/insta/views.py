@@ -4,7 +4,7 @@ from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import get_user_model
 from django.db.models import Q
-from .forms import PostForm
+from .forms import PostForm, CommentForm
 from .models import Tag, Post
 
 from django.http import HttpResponseRedirect
@@ -148,3 +148,26 @@ def post_unlike(request, pk):
     redirect_url = request.META.get("HTTP_REFERER", "root") # HTTP_REFERER은 request 요청을 한 웹페이지의 주소를 보여준다.
     # 만약 HTTP_REFERER가 없으면 root 주소를 가져온다.
     return redirect(redirect_url)
+
+
+# 댓글 쓰기
+@login_required
+def comment_new(request, post_pk):
+    post = get_object_or_404(Post, pk=post_pk)
+
+    if request.method == 'POST':
+        form = CommentForm(request.POST, request.FILES)
+        if form.is_valid():
+            # 내부적으로 comment가 save되는 것을 막음 
+            # 그 이유는 댓글 폼은 message 필드만 받기 때문에, 나머지 필드에서 오류가 생기기 때문이다.
+            # 그러기에 나머지 필드를 채워준 상태에서 form을 저장 시켜야한다.
+            comment = form.save(commit=False)
+            comment.post = post
+            comment.author = request.user
+            comment.save()
+            return redirect(comment.post)    
+    else:
+        form = CommentForm()
+    return render(request, "insta/comment_form.html", {
+        "form" : form,
+    })   
